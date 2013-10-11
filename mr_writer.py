@@ -25,7 +25,6 @@ import subprocess
 
 global IMAGE_DIRECTORY
 
-
 class ImageWriter(gtk.Dialog):
     def __init__(self, parent, image, drives):
         gtk.Dialog.__init__(self, self.__class__.__name__, parent,
