@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+# MrWriter - Trivial image writer tool
+#
+# Copyright (C) 2013 Nick Glynn <Nick.Glynn@feabhas.com>
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
@@ -23,7 +26,7 @@ import subprocess
 
 import time #this can go
 
-image_directory = "/home/nick/Development/mr_writer/"
+global image_directory
 
 class ImageWriter(gtk.Dialog):
     def __init__(self, parent, image, drives):
@@ -182,6 +185,21 @@ class MrWriter(gtk.Window):
 
 if __name__ == "__main__":
     gtk.gdk.threads_init()
-    app = MrWriter()
-    app.show()
-    gtk.main()
+    # Try and read the images directory
+    import ConfigParser as cp
+    try:
+        config = cp.ConfigParser()
+        foo = config.read("./mr_writer.ini")
+        image_directory = config.get("General", "ImageDir")
+        print image_directory
+        if not os.path.isdir(image_directory):
+            raise NameError('Invalid Directory')
+        
+        app = MrWriter()
+        app.show()
+        gtk.main()
+    except:
+        message = gtk.MessageDialog(type=gtk.MESSAGE_ERROR, buttons=gtk.BUTTONS_OK)
+        message.set_markup("You need to set a valid image directory in mr_writer.ini")
+        message.run()
+        
