@@ -24,3 +24,8 @@ becomes:
                 for line in f:
                     if drive in line and "/media" in line:
                         self.drive_list.append("/dev/" + drive)
+
+
+Note
+-----
+This project leverages the SETUID bit in the helper C executable - it WON'T work if you have your FS mounted as nosuid and will fail with permission errors!
