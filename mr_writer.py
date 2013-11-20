@@ -130,20 +130,20 @@ class ImageReader(gtk.Dialog):
             if len(returnedValue) > 3 and not returnedValue.endswith(".img"):
                 self.image_file = returnedValue + ".img"
         
-	print self.image_file
+        print self.image_file
         
         self.set_resizable(False)
         self.still_working = False
-        
+
         self.set_modal(True)
         self.set_size_request(300, 180)
-    
+
         self.finished = True
         # Tell WM this is a dialog
-        self.set_type_hint (gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
+        self.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
 
         # Tell WM this window belongs to parent
-        self.set_transient_for(parent) 
+        self.set_transient_for(parent)
 
         vbox = gtk.VBox(False, 5)
         self.vbox.pack_start(vbox, True, True, 0)
@@ -151,7 +151,7 @@ class ImageReader(gtk.Dialog):
 
         self.label = gtk.Label()
         self.label_text = "Wait for it..."
-        self.label.set_line_wrap(True) 
+        self.label.set_line_wrap(True)
         vbox.pack_start(self.label, False, False, 0)
 
         # Create our entry
@@ -164,13 +164,13 @@ class ImageReader(gtk.Dialog):
         t.start()
         self.show_all()
         self.run()
-        
+
     def pulse(self):
         self.progress.pulse()
         gtk.gdk.threads_enter()
         self.label.set_text(self.label_text)
         gtk.gdk.threads_leave()
-        if self.finished:    
+        if self.finished:
             self.progress.set_fraction(1.0)
             self.label_text = "Finished!"
             self.label.set_text(self.label_text)
@@ -224,6 +224,7 @@ class ImageReader(gtk.Dialog):
         print self.stderr
         self.finished = True
 
+
 class MrWriter(gtk.Window):
     drive_list = []
 
@@ -263,7 +264,6 @@ class MrWriter(gtk.Window):
         write_image_button = gtk.Button("Write Images")
         write_image_button.connect("clicked", self.on_write_image_clicked)
         self.go_box.attach(write_image_button, 1, 2, 0, 1)
-        
         create_image_button = gtk.Button("Create Image")
         create_image_button.connect("clicked", self.on_create_image_clicked)
         self.go_box.attach(create_image_button, 0, 1, 0, 1)
