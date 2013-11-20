@@ -29,6 +29,7 @@ int main(int argc, char **argv)
     }
 
     setuid(0);
+    seteuid(0);
     asprintf(&full_path, "%s/mr_writer.py", dirname(link_path));
     /* Use execv as we want the environment so no execve */
     char *args[10] = { "/usr/bin/env", "python", full_path, NULL };
