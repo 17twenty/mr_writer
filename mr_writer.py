@@ -88,7 +88,7 @@ class ImageWriter(gtk.Dialog):
     def write_thread(self):
         self.finished = False
         for drive in self.drive_list:
-            self.label_text = "Writing %s to drive %s" % (
+            self.label_text = "Writing %s\nto drive\n%s" % (
                 self.image_file, drive)
 
             # The actual write process
@@ -172,7 +172,8 @@ class MrWriter(gtk.Window):
         for drive in os.listdir("/dev/"):
             if drive.startswith("sd") and drive.isalpha():
                 for line in f:
-                    if drive in line:
+                    if drive in line and ("/dev/" + drive) not in self.drive_list:
+                        print drive
                         self.drive_list.append("/dev/" + drive)
 
         print "Found %d drives" % len(self.drive_list)
