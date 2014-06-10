@@ -90,7 +90,7 @@ class ImageWriter(gtk.Dialog):
             self.label_text = "Writing %s to drive %s" % (self.image_file, drive)
             
             # The actual write process
-            command =  ["dd", "if=" + image_directory + self.image_file, "of="+ drive, "bs=4M"]
+            command =  ["dd", "if=" + image_directory + self.image_file, "of="+ drive, "bs=8M"]
             print command
             sp = subprocess.Popen(command, shell=False, 
                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -182,7 +182,7 @@ class ImageReader(gtk.Dialog):
         hbox.pack_start(gtk.Label("Name:"), False, 5, 5)
         hbox.pack_end(entry)
         #some secondary text
-        dialog.format_secondary_markup("This will create a file named <i>something</i>.img")
+        dialog.format_secondary_markup("This will create a file named <b><i>something</i>.img</b>")
         #add it and show it
         dialog.vbox.pack_end(hbox, True, True, 0)
         dialog.show_all()
@@ -197,7 +197,7 @@ class ImageReader(gtk.Dialog):
         # TODO: Prompt for a filename here
         
         #for drive in self.drive_list:
-        self.label_text = "Writing %s to drive %s" % (self.image_file, self.drive_list[0])
+        self.label_text = "Reading %s from %s" % (self.image_file, self.drive_list[0])
             
         # The actual write process
         command =  ["dd", "of=" + image_directory + self.image_file, "if="+ self.drive_list[0], "bs=8M"]
@@ -217,7 +217,7 @@ class MrWriter(gtk.Window):
         gtk.Window.__init__(self)
         self.image_list = self.get_image_list()
         self.connect('destroy', lambda *w: gtk.main_quit())
-        self.set_title("USB Image Writer")
+        self.set_title("Mr Writer | Easy Image Reading/Writing")
         self.set_size_request(320, 160)
         self.set_position(gtk.WIN_POS_CENTER)
         vbox = gtk.VBox(spacing=10)
@@ -283,9 +283,7 @@ class MrWriter(gtk.Window):
         for drive in os.listdir("/dev/"):
             if drive.startswith("sd") and drive.isalpha():
                 for line in f:
-                    print line
                     if drive in line and "/dev/"+drive not in self.drive_list:
-                        print drive
                         self.drive_list.append("/dev/" + drive)
         
         print "Found %d drives" % len(self.drive_list)
