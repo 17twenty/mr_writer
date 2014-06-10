@@ -111,9 +111,23 @@ class ImageReader(gtk.Dialog):
             self.connect('destroy', lambda *w: gtk.main_quit())
         self.connect("response", lambda d, r: d.destroy())
         
+        self.drive_list = drives
         
-        self.image_file = self.getText() + ".img"
-        print self.image_file
+        if len(self.drive_list) != 1:
+            message = gtk.MessageDialog(type=gtk.MESSAGE_ERROR, buttons=gtk.BUTTONS_OK)
+            message.set_markup("Please ensure you have only 1 USB drive connected\nHow do I know which one to image?")
+            message.run()
+            gtk.main_quit()
+            return
+            
+        self.image_file = None
+        while not self.image_file:
+            returnedValue = self.getText()
+            print returnedValue
+            if len(returnedValue) > 3 and not returnedValue.endswith(".img"):
+                self.image_file = returnedValue + ".img"
+        
+	print self.image_file
         
         self.set_resizable(False)
         self.still_working = False
@@ -140,8 +154,6 @@ class ImageReader(gtk.Dialog):
         # Create our entry
         self.progress = gtk.ProgressBar()
         vbox.pack_start(self.progress, False, False, 0)
-        
-        self.drive_list = drives
         
         gobject.timeout_add(400, self.pulse)
         t = threading.Thread(target=self.read_thread)
@@ -172,17 +184,17 @@ class ImageReader(gtk.Dialog):
             gtk.MESSAGE_QUESTION,
             gtk.BUTTONS_OK,
             None)
-        dialog.set_markup('Course/File name (e.g. EL504):')
+        dialog.set_markup('Please specify the course code (e.g. EL504):')
         #create the text input field
         entry = gtk.Entry()
         #allow the user to press enter to do ok
         entry.connect("activate", self.responseToDialog, dialog, gtk.RESPONSE_OK)
         #create a horizontal box to pack the entry and a label
         hbox = gtk.HBox()
-        hbox.pack_start(gtk.Label("Name:"), False, 5, 5)
+        hbox.pack_start(gtk.Label("Course:"), False, 5, 5)
         hbox.pack_end(entry)
         #some secondary text
-        dialog.format_secondary_markup("This will create a file named <b><i>something</i>.img</b>")
+        dialog.format_secondary_markup("This will store a file named <b>something</b>.img")
         #add it and show it
         dialog.vbox.pack_end(hbox, True, True, 0)
         dialog.show_all()
@@ -194,7 +206,6 @@ class ImageReader(gtk.Dialog):
 
     def read_thread(self):
         self.finished = False
-        # TODO: Prompt for a filename here
         
         #for drive in self.drive_list:
         self.label_text = "Reading %s from %s" % (self.image_file, self.drive_list[0])
