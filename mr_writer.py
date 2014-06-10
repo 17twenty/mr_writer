@@ -214,7 +214,7 @@ class ImageReader(gtk.Dialog):
         self.label_text = "Reading %s from %s" % (self.image_file, self.drive_list[0])
             
         # The actual write process
-        command =  ["dd", "of=" + image_directory + self.image_file, "if="+ self.drive_list[0], "bs=8M"]
+        command =  ["dd", "of=" + IMAGE_DIRECTORY + self.image_file, "if="+ self.drive_list[0], "bs=8M"]
         print command
         sp = subprocess.Popen(command, shell=False, 
              stdout=subprocess.PIPE, stderr=subprocess.PIPE)
